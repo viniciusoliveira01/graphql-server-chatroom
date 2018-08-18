@@ -1,0 +1,15 @@
+*.zip
+.elasticbeanstalk
+.DS_Store
+.idea
+node_modules
+npm-debug.log
+dist
+app/config/config.js
+server-config.js
+metadata-css.json
+.vscode
+# Logs
+logs
+*.log
+npm-debug.log*
