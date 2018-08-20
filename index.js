@@ -4,6 +4,7 @@ import { graphqlExpress, graphiqlExpress } from 'apollo-server-express'
 import { makeExecutableSchema } from 'graphql-tools'
 import path from 'path'
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas'
+import cors from 'cors'
 
 import models from './models'
 
@@ -15,6 +16,7 @@ const schema = makeExecutableSchema({
 resolvers})
 
 const app = express()
+app.use(cors('*'))
 
 const graphqlEndpoint = '/graphql'
 
