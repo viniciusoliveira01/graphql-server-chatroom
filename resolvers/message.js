@@ -4,12 +4,13 @@ export default {
       try {
         await models.Message.create({
           ...args,
-          userId: user.id
-        })
-        return true
-      } catch (e) {
-        return false
+          userId: user.id,
+        });
+        return true;
+      } catch (err) {
+        console.log(err);
+        return false;
       }
-    }
-  }
-}
+    },
+  },
+};
