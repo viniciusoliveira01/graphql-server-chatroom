@@ -6,6 +6,9 @@ import path from 'path'
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
+import { createServer } from 'http'
+import { execute, subscribe } from 'graphql'
+import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { refreshTokens } from './auth'
 import models from './models'
@@ -64,6 +67,18 @@ app.use(
 
 app.use('/graphiql', graphiqlExpress({ endpointURL: graphqlEndpoint }))
 
+const server = createServer(app)
+
 models.sequelize.sync({ }).then(() => {
-  app.listen(8081)
+  server.listen(8081, () => {
+    // eslint-disable-next-line no-new
+    new SubscriptionServer({
+      execute,
+      subscribe,
+      schema
+    },{
+      server,
+      path: '/subscriptions'
+    })
+  })
 })
