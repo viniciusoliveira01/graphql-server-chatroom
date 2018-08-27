@@ -2,9 +2,9 @@ export default `
   type Team {
     id: Int!
     name: String!
-    owner: Int!
-    members: [User!]!
+    directMessageMembers: [User!]!
     channels: [Channel!]!
+    admin: Boolean!
   }
   type CreateTeamResponse {
     ok: Boolean!
@@ -14,6 +14,7 @@ export default `
   type Query {
     allTeams: [Team!]!
     inviteTeams: [Team!]!
+    getTeamMembers(teamId: Int!): [User!]!
   }
   type VoidResponse {
     ok: Boolean!

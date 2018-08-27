@@ -11,6 +11,7 @@ import { execute, subscribe } from 'graphql'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 import { refreshTokens } from './auth'
+
 import models from './models'
 
 const SECRET = 'asiodfhoi1hoi23jnl1kejd'
@@ -65,18 +66,31 @@ app.use(
   })),
 );
 
-app.use('/graphiql', graphiqlExpress({ endpointURL: graphqlEndpoint }))
+app.use('/graphiql', graphiqlExpress({ endpointURL: graphqlEndpoint, subscriptionsEndpoint: 'ws://localhost:8081/subscriptions' }))
 
 const server = createServer(app)
 
-models.sequelize.sync({ }).then(() => {
+models.sequelize.sync({}).then(() => {
   server.listen(8081, () => {
     // eslint-disable-next-line no-new
     new SubscriptionServer({
       execute,
       subscribe,
-      schema
-    },{
+      schema,
+      onConnect: async ({ token, refreshToken }, webSocket) => {
+        if (token && refreshToken) {
+          try {
+            const { user } = jwt.verify(token, SECRET)
+            return { models, user }
+          } catch (err) {
+            const newTokens = await refreshTokens(token, refreshToken, models, SECRET, SECRET2);
+            return { models, user: newTokens.user }
+          }
+        }
+
+        return {models}
+      }
+    }, {
       server,
       path: '/subscriptions'
     })
