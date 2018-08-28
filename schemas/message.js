@@ -12,7 +12,7 @@ export default `
   }
 
   type Query {
-    messages(channelId: Int!): [Message!]!
+    messages(cursor: String, channelId: Int!): [Message!]!
   }
   type Mutation {
     createMessage(channelId: Int!, text: String!): Boolean!
