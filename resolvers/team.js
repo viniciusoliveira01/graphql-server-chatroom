@@ -39,7 +39,6 @@ export default {
           ok: true,
         };
       } catch (err) {
-        console.log(err);
         return {
           ok: false,
           errors: formatErrors(err, models),
@@ -59,7 +58,6 @@ export default {
           team: response,
         };
       } catch (err) {
-        console.log(err);
         return {
           ok: false,
           errors: formatErrors(err, models),
